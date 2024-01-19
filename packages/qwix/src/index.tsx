@@ -1,4 +1,4 @@
-import { type QwikJSX, render, Component } from "@builder.io/qwik";
+import { Component, type QwikJSX, render } from "@builder.io/qwik";
 import { parse_props, parse_val } from "./parser";
 
 export type Props = Record<any, any>;
@@ -16,7 +16,12 @@ export declare const Renderer: {
 
 class QElement extends HTMLElement {}
 
-export function use(renderer: Renderer, template: Template, Component: Component, prefix = "q") {
+export function use(
+  renderer: Renderer,
+  template: Template,
+  Component: Component,
+  prefix = "q",
+) {
   const tag = `${prefix}-${renderer.name}`;
   if (!customElements.get(tag)) {
     customElements.define(tag, QElement);
@@ -60,19 +65,19 @@ export function use(renderer: Renderer, template: Template, Component: Component
           elt.removeAttribute(`:${_prop}`);
           continue;
         }
-  
+
         attr = elt.getAttribute(_prop);
         if (attr) {
           _props[_prop] = attr;
           elt.removeAttribute(_prop);
           continue;
         }
-  
+
         _props[_prop] = _val;
       }
     }
     console.log(_props);
-    
+
     render(elt, <Component {..._props}>{slot}</Component>);
   }
 }
