@@ -1,4 +1,4 @@
-import { Component, type QwikJSX, render } from "@builder.io/qwik";
+import { type Component, type QwikJSX, render } from "@builder.io/qwik";
 import { parse_props, parse_val } from "./parser";
 
 export type Props = Record<any, any>;

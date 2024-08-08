@@ -1,7 +1,5 @@
 {
-  "include": [
-    "src",
-  ],
+  "include": ["src"],
   "compilerOptions": {
     "allowJs": true,
     "target": "ES2017",
@@ -40,8 +38,6 @@
     "importHelpers": true,
     "jsx": "react-jsx",
     "jsxImportSource": "@builder.io/qwik",
-    "types": [
-      "vite/client"
-    ],
+    "types": ["vite/client"]
   }
 }
