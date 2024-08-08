@@ -16,7 +16,7 @@ export declare const Renderer: {
 
 class QElement extends HTMLElement {}
 
-export function use(
+export default function (
   renderer: Renderer,
   template: Template,
   Component: Component,
