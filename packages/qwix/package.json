@@ -1,7 +1,7 @@
 {
   "name": "qwix",
   "description": "💡 A frontend library to initialize and use Qwik components instantly from custom HTML elements using directives.",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": false,
   "type": "module",
   "engines": {
