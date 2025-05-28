@@ -1,23 +1,6 @@
-import {
-  type Component,
-  type QwikJSX,
-  component$,
-  render,
-} from "@builder.io/qwik";
+import { component$, render } from "@builder.io/qwik";
 import { parse_props, parse_val } from "./parser";
-
-export type Props = Record<any, any>;
-export type Template = <T extends Props>(props: T) => QwikJSX.Element;
-
-export interface Renderer {
-  selector: string;
-  template: Template;
-}
-
-export declare const Renderer: {
-  prototype: Renderer;
-  new (): Renderer;
-};
+import type { Component, Props, Renderer, Template } from "./types";
 
 class QElement extends HTMLElement {}
 
@@ -29,7 +12,6 @@ export function defineTemplate<T extends Props>(
   selector: string,
   template: Template,
 ) {
-  console.log(selector, template);
   const Qomponent: Component = component$<T>((props: T) => template(props));
 
   if (!customElements.get(selector)) {
