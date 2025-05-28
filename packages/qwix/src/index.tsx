@@ -1,6 +1,6 @@
 import {
-  registerComponentBySelector,
   registerRendererComponent,
+  registerTemplateBySelector,
 } from "./register";
 import type { Props, Renderer, Template } from "./types";
 
@@ -25,7 +25,7 @@ export default function <T extends Props>(
   arg2?: Template,
 ): void {
   if (typeof arg1 === "string" && typeof arg2 === "function") {
-    registerComponentBySelector<T>(arg1, arg2);
+    registerTemplateBySelector<T>(arg1, arg2);
     return;
   }
 
@@ -46,7 +46,7 @@ export default function <T extends Props>(
     }
 
     for (const [selector, template] of Object.entries(arg1)) {
-      registerComponentBySelector<T>(selector, template);
+      registerTemplateBySelector<T>(selector, template);
     }
     return;
   }
