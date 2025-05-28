@@ -2,7 +2,7 @@ import { component$, render } from "@builder.io/qwik";
 import { parse_fn_params, parse_val } from "./parser";
 import type { Component, Props, Renderer, Template } from "./types";
 
-class QElement extends HTMLElement {}
+class QwixElement extends HTMLElement {}
 
 export function defineRenderer<T extends Props>(renderer: Renderer) {
   return defineTemplate<T>(renderer.selector, renderer.template);
@@ -12,41 +12,16 @@ export function defineTemplate<T extends Props>(
   selector: string,
   template: Template,
 ) {
-  const Qomponent: Component = component$<T>((props: T) => template(props));
-
   if (!customElements.get(selector)) {
-    customElements.define(selector, QElement);
+    customElements.define(selector, QwixElement);
   }
-
-  const props = parse_fn_params(template);
 
   defineSelectorElements(selector);
-
-  for (const elt of document.getElementsByTagName(selector)) {
-    const _props: Props = {};
-    const slot = elt.innerHTML;
-    if (props) {
-      for (const [_prop, _val] of Object.entries(props)) {
-        let attr = elt.getAttribute(`:${_prop}`);
-        if (attr) {
-          _props[_prop] = parse_val(attr);
-          elt.removeAttribute(`:${_prop}`);
-          continue;
-        }
-
-        attr = elt.getAttribute(_prop);
-        if (attr) {
-          _props[_prop] = attr;
-          elt.removeAttribute(_prop);
-          continue;
-        }
-
-        _props[_prop] = _val;
-      }
-    }
-
-    defineComponent(elt, Qomponent, _props, slot);
-  }
+  defineTagComponents(
+    selector,
+    parse_fn_params(template),
+    component$<T>((props: T) => template(props)),
+  );
 }
 
 export function defineSelectorElements(selector: string) {
@@ -75,6 +50,46 @@ export function defineSelectorElement(element: Element, selector: string) {
   element.parentNode
     ? element.parentNode.replaceChild(selectorElement, element)
     : element.replaceWith(selectorElement);
+}
+
+export function defineTagComponents(
+  tagName: string,
+  params: object,
+  component: Component,
+) {
+  for (const element of document.getElementsByTagName(tagName)) {
+    defineElementComponent(element, params, component);
+  }
+}
+
+export function defineElementComponent(
+  element: Element,
+  params: object,
+  component: Component,
+) {
+  const props: Props = {};
+  const slot = element.innerHTML;
+  if (params) {
+    for (const [_prop, _val] of Object.entries(params)) {
+      let attr = element.getAttribute(`:${_prop}`);
+      if (attr) {
+        props[_prop] = parse_val(attr);
+        element.removeAttribute(`:${_prop}`);
+        continue;
+      }
+
+      attr = element.getAttribute(_prop);
+      if (attr) {
+        props[_prop] = attr;
+        element.removeAttribute(_prop);
+        continue;
+      }
+
+      props[_prop] = _val;
+    }
+  }
+
+  defineComponent(element, component, props, slot);
 }
 
 export function defineComponent<T extends Props>(
