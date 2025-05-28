@@ -20,27 +20,7 @@ export function defineTemplate<T extends Props>(
 
   const props = parse_fn_params(template);
 
-  for (const elt of document.querySelectorAll(`[${selector}]`)) {
-    elt.removeAttribute(selector);
-
-    const attrs = elt.attributes;
-    const q_elt = document.createElement(selector);
-    for (const attr of Array.from(attrs)) {
-      q_elt.setAttribute(attr.name, attr.value);
-    }
-
-    if (elt.childNodes.length > 0) {
-      for (const child of Array.from(elt.childNodes)) {
-        q_elt.appendChild(child.cloneNode(true));
-      }
-    } else {
-      q_elt.textContent = elt.textContent;
-    }
-
-    elt.parentNode
-      ? elt.parentNode.replaceChild(q_elt, elt)
-      : elt.replaceWith(q_elt);
-  }
+  defineSelectorElements(selector);
 
   for (const elt of document.getElementsByTagName(selector)) {
     const _props: Props = {};
@@ -67,6 +47,34 @@ export function defineTemplate<T extends Props>(
 
     defineComponent(elt, Qomponent, _props, slot);
   }
+}
+
+export function defineSelectorElements(selector: string) {
+  for (const elt of document.querySelectorAll(`[${selector}]`)) {
+    defineSelectorElement(elt, selector);
+  }
+}
+
+export function defineSelectorElement(element: Element, selector: string) {
+  element.removeAttribute(selector);
+
+  const attrs = element.attributes;
+  const selectorElement = document.createElement(selector);
+  for (const attr of Array.from(attrs)) {
+    selectorElement.setAttribute(attr.name, attr.value);
+  }
+
+  if (element.childNodes.length > 0) {
+    for (const child of Array.from(element.childNodes)) {
+      selectorElement.appendChild(child.cloneNode(true));
+    }
+  } else {
+    selectorElement.textContent = element.textContent;
+  }
+
+  element.parentNode
+    ? element.parentNode.replaceChild(selectorElement, element)
+    : element.replaceWith(selectorElement);
 }
 
 export function defineComponent<T extends Props>(
