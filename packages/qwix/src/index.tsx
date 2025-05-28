@@ -1,5 +1,5 @@
 import { component$, render } from "@builder.io/qwik";
-import { parse_props, parse_val } from "./parser";
+import { parse_fn_params, parse_val } from "./parser";
 import type { Component, Props, Renderer, Template } from "./types";
 
 class QElement extends HTMLElement {}
@@ -18,11 +18,7 @@ export function defineTemplate<T extends Props>(
     customElements.define(selector, QElement);
   }
 
-  const reg =
-    /(?:template)?\s*(?:function\s*\w*\s*)?\(\{([^\(\)\{\}]+?)\}\)\s*(?:\=\>)?\s*\{?/gm;
-  const tpl = template.toString().trim();
-  const res = reg.exec(tpl);
-  const props = res ? parse_props(res[1].trim()) : {};
+  const props = parse_fn_params(template);
 
   for (const elt of document.querySelectorAll(`[${selector}]`)) {
     elt.removeAttribute(selector);

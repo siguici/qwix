@@ -16,6 +16,9 @@
       },
       "suspicious": {
         "noExplicitAny": "off"
+      },
+      "complexity": {
+        "noBannedTypes": "off"
       }
     },
     "ignore": ["dist", "node_modules"]

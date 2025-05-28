@@ -139,3 +139,11 @@ export function parse_param(val: string): any {
   }
   return [parse_val(val)];
 }
+
+export function parse_fn_params(fn: Function): object {
+  const result =
+    /(?:(?:function\s*\w*\s*)|(?:\w+\s*))?\(\{([^\(\)\{\}]+?)\}\)\s*(?:\=\>)?\s*\{?/gm.exec(
+      fn.toString().trim(),
+    );
+  return result ? parse_props(result[1].trim()) : {};
+}
