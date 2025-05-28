@@ -26,9 +26,9 @@
     "start": "vite --open"
   },
   "devDependencies": {
-    "@builder.io/qwik": "^1.12.0",
+    "@builder.io/qwik": "^1.14.1",
     "qwix": "workspace:*",
-    "typescript": "^5.7.3",
-    "vite": "^6.0.11"
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
   }
 }
