@@ -5,11 +5,11 @@
   "private": false,
   "type": "module",
   "engines": {
-    "node": ">=20.11",
-    "pnpm": ">=9.7",
+    "node": ">=22.16",
+    "pnpm": ">=10.11",
     "npm": "prefer using pnpm"
   },
-  "packageManager": "pnpm@9.7.0",
+  "packageManager": "pnpm@10.11.0",
   "publishConfig": {
     "access": "public"
   },
@@ -32,9 +32,7 @@
     "./parser": "./src/parser.ts",
     "./package.json": "./package.json"
   },
-  "files": [
-    "src"
-  ],
+  "files": ["src"],
   "keywords": [
     "custom-component",
     "custom-element",
@@ -51,7 +49,7 @@
     "typescript": "^5.8.3"
   },
   "peerDependencies": {
-    "@builder.io/qwik": "^1.3.5",
-    "typescript": "^5.3.3"
+    "@builder.io/qwik": "^1.14.1",
+    "typescript": "^5.8.3"
   }
 }

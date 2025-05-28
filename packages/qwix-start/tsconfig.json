@@ -2,7 +2,7 @@
   "include": ["src"],
   "compilerOptions": {
     "allowJs": true,
-    "target": "ES2017",
+    "target": "ES2018",
     "module": "ES2020",
     "lib": ["es2020", "DOM", "WebWorker", "DOM.Iterable"],
     "skipLibCheck": true,

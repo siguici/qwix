@@ -4,11 +4,11 @@
   "license": "MIT",
   "private": "true",
   "engines": {
-    "node": ">=20.11",
-    "pnpm": ">=9.7",
+    "node": ">=22.16",
+    "pnpm": ">=10.11",
     "npm": "prefer using pnpm"
   },
-  "packageManager": "pnpm@9.7.0",
+  "packageManager": "pnpm@10.11.0",
   "author": {
     "name": "Sigui Kessé Emmanuel",
     "email": "dev@sikessem.com",
@@ -45,9 +45,9 @@
     "which-pm-runs": "^1.1.0"
   },
   "peerDependencies": {
-    "typescript": "^5.3.3"
+    "typescript": "^5.8.3"
   },
   "volta": {
-    "node": "20.11.0"
+    "node": "22.16.0"
   }
 }

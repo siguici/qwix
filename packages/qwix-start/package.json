@@ -3,11 +3,11 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=20.11",
-    "pnpm": ">=9.7",
+    "node": ">=22.16",
+    "pnpm": ">=10.11",
     "npm": "prefer using pnpm"
   },
-  "packageManager": "pnpm@9.7.0",
+  "packageManager": "pnpm@10.11.0",
   "homepage": "https://github.com/siguici/qwix",
   "repository": {
     "type": "git",
