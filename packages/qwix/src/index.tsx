@@ -21,25 +21,31 @@ export declare const Renderer: {
 
 class QElement extends HTMLElement {}
 
-export default function <T extends Props>(renderer: Renderer, prefix = "q") {
-  const tag = `${prefix}-${renderer.selector}`;
-  const template = renderer.template;
+export function defineRenderer<T extends Props>(renderer: Renderer) {
+  return defineTemplate<T>(renderer.selector, renderer.template);
+}
+
+export function defineTemplate<T extends Props>(
+  selector: string,
+  template: Template,
+) {
+  console.log(selector, template);
   const Qomponent: Component = component$<T>((props: T) => template(props));
 
-  if (!customElements.get(tag)) {
-    customElements.define(tag, QElement);
+  if (!customElements.get(selector)) {
+    customElements.define(selector, QElement);
   }
 
-  const reg = /(?:render)?\s*\(\{([^\(\)\{\}]+?)\}\)\s*(?:\=\>)?\s*\{?/gm;
+  const reg = /(?:template)?\s*\(\{([^\(\)\{\}]+?)\}\)\s*(?:\=\>)?\s*\{?/gm;
   const tpl = template.toString();
   const res = reg.exec(tpl);
   const props = res ? parse_props(res[1]) : {};
 
-  for (const elt of document.querySelectorAll(`[${tag}]`)) {
-    elt.removeAttribute(tag);
+  for (const elt of document.querySelectorAll(`[${selector}]`)) {
+    elt.removeAttribute(selector);
 
     const attrs = elt.attributes;
-    const q_elt = document.createElement(tag);
+    const q_elt = document.createElement(selector);
     for (const attr of Array.from(attrs)) {
       q_elt.setAttribute(attr.name, attr.value);
     }
@@ -57,7 +63,7 @@ export default function <T extends Props>(renderer: Renderer, prefix = "q") {
       : elt.replaceWith(q_elt);
   }
 
-  for (const elt of document.getElementsByTagName(tag)) {
+  for (const elt of document.getElementsByTagName(selector)) {
     const _props: Props = {};
     const slot = elt.innerHTML;
     if (props) {
@@ -79,8 +85,67 @@ export default function <T extends Props>(renderer: Renderer, prefix = "q") {
         _props[_prop] = _val;
       }
     }
-    console.log(_props);
 
-    render(elt, <Qomponent {..._props}>{slot}</Qomponent>);
+    defineComponent(elt, Qomponent, _props, slot);
   }
 }
+
+export function defineComponent<T extends Props>(
+  parent: Document | Element,
+  Output: Component,
+  props: T,
+  slot: string,
+) {
+  return render(parent, <Output {...props}>{slot}</Output>);
+}
+
+export function qwix<T extends Props>(components: {
+  [key: string]: Template;
+}): void;
+export function qwix<T extends Props>(
+  components: { selector: string; template: Template }[],
+): void;
+export function qwix<T extends Props>(
+  selector: string,
+  template: Template,
+): void;
+export function qwix<T extends Props>(renderer: Renderer): void;
+export function qwix<T extends Props>(
+  arg1:
+    | string
+    | Renderer
+    | { [key: string]: Template }
+    | { selector: string; template: Template }[],
+  arg2?: Template,
+): void {
+  if (typeof arg1 === "string" && typeof arg2 === "function") {
+    defineTemplate<T>(arg1, arg2);
+    return;
+  }
+
+  if (Array.isArray(arg1)) {
+    for (const renderer of arg1) {
+      defineRenderer<T>(renderer);
+    }
+    return;
+  }
+
+  if (typeof arg1 === "object" && typeof arg2 === "undefined") {
+    if (
+      typeof arg1.selector === "string" &&
+      typeof arg1.template === "function"
+    ) {
+      defineRenderer<T>(arg1 as Renderer);
+      return;
+    }
+
+    for (const [selector, template] of Object.entries(arg1)) {
+      defineTemplate<T>(selector, template);
+    }
+    return;
+  }
+
+  throw new Error("Invalid arguments passed to qwix()");
+}
+
+export default qwix;

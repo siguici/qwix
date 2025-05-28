@@ -2,7 +2,7 @@ import { $, Slot, useSignal } from "@builder.io/qwik";
 import "./counter.css";
 
 export class Counter {
-  selector = "counter";
+  selector = "q-counter";
   template = ({ init = 0, step = 1 }) => {
     const count = useSignal(init);
 
