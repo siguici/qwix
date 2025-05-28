@@ -1,12 +1,17 @@
-import { type Component, type QwikJSX, render } from "@builder.io/qwik";
+import {
+  type Component,
+  type QwikJSX,
+  component$,
+  render,
+} from "@builder.io/qwik";
 import { parse_props, parse_val } from "./parser";
 
 export type Props = Record<any, any>;
 export type Template = <T extends Props>(props: T) => QwikJSX.Element;
 
 export interface Renderer {
-  name: string;
-  render: Template;
+  selector: string;
+  template: Template;
 }
 
 export declare const Renderer: {
@@ -16,13 +21,11 @@ export declare const Renderer: {
 
 class QElement extends HTMLElement {}
 
-export default function (
-  renderer: Renderer,
-  template: Template,
-  Component: Component,
-  prefix = "q",
-) {
-  const tag = `${prefix}-${renderer.name}`;
+export default function <T extends Props>(renderer: Renderer, prefix = "q") {
+  const tag = `${prefix}-${renderer.selector}`;
+  const template = renderer.template;
+  const Qomponent: Component = component$<T>((props: T) => template(props));
+
   if (!customElements.get(tag)) {
     customElements.define(tag, QElement);
   }
@@ -78,6 +81,6 @@ export default function (
     }
     console.log(_props);
 
-    render(elt, <Component {..._props}>{slot}</Component>);
+    render(elt, <Qomponent {..._props}>{slot}</Qomponent>);
   }
 }
