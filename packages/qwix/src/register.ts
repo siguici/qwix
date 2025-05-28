@@ -26,55 +26,27 @@ export function registerComponentBySelector<T extends Props>(
   );
 }
 
-export function registerQwixComponents<T extends Props>(components: {
-  [key: string]: Template;
-}): void;
-export function registerQwixComponents<T extends Props>(
-  components: { selector: string; template: Template }[],
-): void;
-export function registerQwixComponents<T extends Props>(
-  selector: string,
-  template: Template,
-): void;
-export function registerQwixComponents<T extends Props>(
-  renderer: Renderer,
-): void;
-export function registerQwixComponents<T extends Props>(
-  arg1:
-    | string
-    | Renderer
-    | { [key: string]: Template }
-    | { selector: string; template: Template }[],
-  arg2?: Template,
-): void {
-  if (typeof arg1 === "string" && typeof arg2 === "function") {
-    registerComponentBySelector<T>(arg1, arg2);
-    return;
+export function registerFromMap<T extends Props>(
+  components: Record<string, Template>,
+) {
+  for (const [selector, template] of Object.entries(components)) {
+    registerComponentBySelector<T>(selector, template);
   }
-
-  if (Array.isArray(arg1)) {
-    for (const renderer of arg1) {
-      registerRendererComponent<T>(renderer);
-    }
-    return;
-  }
-
-  if (typeof arg1 === "object" && typeof arg2 === "undefined") {
-    if (
-      typeof arg1.selector === "string" &&
-      typeof arg1.template === "function"
-    ) {
-      registerRendererComponent<T>(arg1 as Renderer);
-      return;
-    }
-
-    for (const [selector, template] of Object.entries(arg1)) {
-      registerComponentBySelector<T>(selector, template);
-    }
-    return;
-  }
-
-  throw new Error("Invalid arguments passed to registerQwixComponents()");
 }
 
-export default registerQwixComponents;
+export function registerFromArray<T extends Props>(renderers: Renderer[]) {
+  for (const renderer of renderers) {
+    registerFromRenderer<T>(renderer);
+  }
+}
+
+export function registerFromRenderer<T extends Props>(renderer: Renderer) {
+  registerComponentBySelector<T>(renderer.selector, renderer.template);
+}
+
+export function registerFromSelector<T extends Props>(
+  selector: string,
+  template: Template,
+) {
+  registerComponentBySelector<T>(selector, template);
+}
