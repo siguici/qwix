@@ -18,10 +18,11 @@ export function defineTemplate<T extends Props>(
     customElements.define(selector, QElement);
   }
 
-  const reg = /(?:template)?\s*\(\{([^\(\)\{\}]+?)\}\)\s*(?:\=\>)?\s*\{?/gm;
-  const tpl = template.toString();
+  const reg =
+    /(?:template)?\s*(?:function\s*\w*\s*)?\(\{([^\(\)\{\}]+?)\}\)\s*(?:\=\>)?\s*\{?/gm;
+  const tpl = template.toString().trim();
   const res = reg.exec(tpl);
-  const props = res ? parse_props(res[1]) : {};
+  const props = res ? parse_props(res[1].trim()) : {};
 
   for (const elt of document.querySelectorAll(`[${selector}]`)) {
     elt.removeAttribute(selector);
